@@ -1,66 +1,69 @@
-const User = require('./User')
-const Post = require('./Post')
-const Vote = require('./Vote')
-const Comment = require('./Comment')
+// import all models
+const Post = require('./Post');
+const User = require('./User');
+const Vote = require('./Vote');
+const Comment = require('./Comment');
 
-// create association (1 user has many posts)
+// create associations
 User.hasMany(Post, {
-    foreignKey: 'user_id'
-})
+  foreignKey: 'user_id'
+});
+
 Post.belongsTo(User, {
-    foreignKey: 'user_id'
-})
+  foreignKey: 'user_id',
+  onDelete: 'SET NULL'
+});
 
-// create association (through votes)
 User.belongsToMany(Post, {
-    through: Vote,
-    as: 'voted_posts',
-    foreignKey: 'user_id'
-})
-  
+  through: Vote,
+  as: 'voted_posts',
+
+  foreignKey: 'user_id',
+  onDelete: 'SET NULL'
+});
+
 Post.belongsToMany(User, {
-    through: Vote,
-    as: 'voted_posts',
-    foreignKey: 'post_id'
-})
+  through: Vote,
+  as: 'voted_posts',
+  foreignKey: 'post_id',
+  onDelete: 'SET NULL'
+});
 
-// create association (1 vote to 1 user)
 Vote.belongsTo(User, {
-    foreignKey: 'user_id'
-})
+  foreignKey: 'user_id',
+  onDelete: 'SET NULL'
+});
 
-// create association (1 vote to 1 post)
 Vote.belongsTo(Post, {
-    foreignKey: 'post_id'
-})
+  foreignKey: 'post_id',
+  onDelete: 'SET NULL'
+});
 
-// create association (1 user has many votes)
 User.hasMany(Vote, {
-    foreignKey: 'user_id'
-})
+  foreignKey: 'user_id'
+});
 
-// create association (1 post has many votes)
 Post.hasMany(Vote, {
-    foreignKey: 'post_id'
-})
+  foreignKey: 'post_id'
+});
 
-// create associations for comments
-// 1 user has many comments
 Comment.belongsTo(User, {
-    foreignKey: 'user_id'
-})
+  foreignKey: 'user_id',
+  onDelete: 'SET NULL'
+});
+
+Comment.belongsTo(Post, {
+  foreignKey: 'post_id',
+  onDelete: 'SET NULL'
+});
 
 User.hasMany(Comment, {
-    foreignKey: 'user_id'
-})
-
-// 1 post has many comments
-Comment.belongsTo(Post, {
-    foreignKey: 'post_id'
-})
+  foreignKey: 'user_id',
+  onDelete: 'SET NULL'
+});
 
 Post.hasMany(Comment, {
-    foreignKey: 'post_id'
-})
+  foreignKey: 'post_id'
+});
 
-module.exports = { User, Post, Vote, Comment }
+module.exports = { User, Post, Vote, Comment };
